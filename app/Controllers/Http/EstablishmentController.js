@@ -31,8 +31,7 @@ class EstablishmentController {
       'title',
       'address',
       'latitude',
-      'longitude',
-      'price'
+      'longitude'
     ])
 
     const establishment = await Establishment.create({...data, user_id: id})
@@ -64,8 +63,7 @@ class EstablishmentController {
       'title',
       'address',
       'latitude',
-      'longitude',
-      'price'
+      'longitude'
     ])
 
     establishment.merge(data)
