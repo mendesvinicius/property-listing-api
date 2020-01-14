@@ -2,7 +2,21 @@
 
 const Model = use('Model')
 
-class Property extends Model {
+const Database = use('Database')
+
+class Establishment extends Model {
+  static scopeNearBy (query, latitude, longitude, distance){
+
+    const haversine = `(6371 * acos(cos(radians(${latitude}))
+    * cos(radians(latitude))
+    * cos(radians(longitude)
+    - radians(${longitude}))
+    + sin(radians(${latitude}))
+    * sin(radians(latitude))))`
+    return query
+    .select('*', Database.raw(`${haversine} as distance`))
+    .wheteRaw(`${haversine} < ${distance}`)
+  }
   user () {
     return this.belongsTo('App/Models/User')
   }
@@ -12,4 +26,4 @@ class Property extends Model {
   }
 }
 
-module.exports = Property
+module.exports = Establishment

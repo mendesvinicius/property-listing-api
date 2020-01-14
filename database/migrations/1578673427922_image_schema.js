@@ -7,10 +7,10 @@ class ImageSchema extends Schema {
     this.create('images', table => {
       table.increments()
       table
-        .integer('property_id')
+        .integer('establishment_id')
         .unsigned()
         .references('id')
-        .inTable('properties')
+        .inTable('establishments')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
       table.string('path').notNullable()

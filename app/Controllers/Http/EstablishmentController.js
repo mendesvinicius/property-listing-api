@@ -10,9 +10,14 @@ class EstablishmentController {
    * Show a list of all establishments.
    * GET establishments
    */
-  async index () {
-    const establishments = Establishment.all()
+  async index ({ request }) {
+    const { latitude, longitude } = request.all()
 
+    const establishments = Establishment.query()
+    .with('images')
+    .nearBy(latitude, longitude, 10)
+    .fetch()
+    
     return establishments
   }
 
@@ -20,8 +25,22 @@ class EstablishmentController {
    * Create/save a new establishment.
    * POST establishments
    */
-  async store ({ request, response }) {}
+  async store ({ request, response }) {
+    const { id } = auth.user
+    const data = request.only([
+      'title',
+      'address',
+      'latitude',
+      'longitude',
+      'price'
+    ])
 
+    const establishment = await Establishment.create({...data, user_id: id})
+
+    return establishment
+
+  }
+     
   /**
    * Display a single establishment.
    * GET establishments/:id
@@ -38,7 +57,23 @@ class EstablishmentController {
    * Update establishment details.
    * PUT or PATCH establishments/:id
    */
-  async update ({ params, request, response }) {}
+  async update ({ params, request, response }) {
+    const establishment = await Establishment.findOrFail(params.id)
+
+    const data = request.only([
+      'title',
+      'address',
+      'latitude',
+      'longitude',
+      'price'
+    ])
+
+    establishment.merge(data)
+
+    await establishment.save()
+
+    return establishment
+  }
 
   /**
    * Delete a establishment with id.
